@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Avenyx_48</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="side-logo">AVENYX<span>_48</span></div>
+
+    <a href="#" class="active">Dashboard</a>
+    <a href="#addShow">Tambah Jadwal</a>
+    <a href="index.html">Lihat Website</a>
+    <button id="logoutBtn">Logout</button>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-top">
+      <h1>Panel Admin</h1>
+      <p>Kelola jadwal show Avenyx_48.</p>
+    </div>
+
+    <section class="admin-card" id="addShow">
+      <h2>Tambah Jadwal Show</h2>
+
+      <form id="showForm">
+        <label>Gambar Show</label>
+        <input type="file" id="image" accept="image/*" />
+
+        <input type="text" id="title" placeholder="Judul Show" required />
+        <input type="date" id="date" required />
+        <input type="time" id="time" required />
+        <input type="text" id="price" placeholder="Harga, contoh: Rp 8.000" required />
+        <textarea id="description" placeholder="Deskripsi show" required></textarea>
+
+        <button type="submit">Tambah Jadwal</button>
+      </form>
+    </section>
+
+    <section class="admin-card">
+      <h2>Daftar Jadwal</h2>
+      <div id="adminScheduleList"></div>
+    </section>
+  </main>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
