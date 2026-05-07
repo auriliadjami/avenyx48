@@ -304,7 +304,8 @@ window.buyTicket = function (index) {
 };
 
 /* MEMBERSHIP */
-window.openMembershipDetail = function () {
+/* BUNDLE DETAIL POPUP */
+window.openBundleDetail = function (packageName, priceNum) {
   const modal = document.createElement("div");
   modal.className = "detail-modal";
 
@@ -312,47 +313,34 @@ window.openMembershipDetail = function () {
     <div class="detail-card">
       <button class="close-modal" onclick="closeShowDetail()">×</button>
 
-      <h2>Detail Langganan</h2>
+      <h2>${packageName}</h2>
 
       <div class="detail-line"></div>
 
-      <div class="detail-date-row">
-        <div>
-          <span>PAKET</span>
-          <strong>Langganan 30 Hari</strong>
-        </div>
-
-        <div>
-          <span>HARGA</span>
-          <strong>Rp 30.000</strong>
-        </div>
-      </div>
-
       <div class="detail-info">
-        <p>💎 <span>Akses info show 30 hari.</span></p>
-        <p>📅 <span>Update jadwal theater.</span></p>
-        <p>🔁 <span>Replay show.</span></p>
-        <p>👥 <span>Komunitas fans.</span></p>
+        <p>🚫 <span>Tidak bisa direfund.</span></p>
+        <p>✉️ <span>Konfirmasi pemesanan di WhatsApp admin.</span></p>
+        <p>💎 <span>Akses langsung setelah konfirmasi.</span></p>
       </div>
 
       <div class="ticket-box">
         <label>JUMLAH PAKET</label>
         <div class="ticket-control">
-          <button onclick="changePackageQty(-1)">−</button>
-          <input id="packageQty" type="number" value="1" min="1" readonly>
-          <button onclick="changePackageQty(1)">+</button>
+          <button onclick="changeBundleQty(-1, ${priceNum})">−</button>
+          <input id="bundleQty" type="number" value="1" min="1" readonly>
+          <button onclick="changeBundleQty(1, ${priceNum})">+</button>
         </div>
       </div>
 
       <div class="detail-line"></div>
 
       <div class="detail-price-row">
-        <span>HARGA</span>
-        <strong>Rp 30.000</strong>
+        <span>TOTAL HARGA</span>
+        <strong id="bundleTotalPrice">Rp ${priceNum.toLocaleString("id-ID")}</strong>
       </div>
 
-      <a href="#" onclick="buyMembership()" class="buy-ticket-btn">
-        Beli Paket Langganan
+      <a href="#" onclick="buyBundle('${packageName}', ${priceNum})" class="buy-ticket-btn">
+        Order Sekarang
       </a>
     </div>
   `;
@@ -360,24 +348,30 @@ window.openMembershipDetail = function () {
   document.body.appendChild(modal);
 };
 
-window.changePackageQty = function (amount) {
-  const input = document.getElementById("packageQty");
+window.changeBundleQty = function (amount, pricePerItem) {
+  const input = document.getElementById("bundleQty");
   let value = parseInt(input.value) || 1;
 
   value += amount;
   if (value < 1) value = 1;
 
   input.value = value;
+
+  const total = value * pricePerItem;
+  document.getElementById("bundleTotalPrice").textContent =
+    "Rp " + total.toLocaleString("id-ID");
 };
 
-window.buyMembership = function () {
-  const qty = document.getElementById("packageQty").value;
+window.buyBundle = function (packageName, priceNum) {
+  const qty = document.getElementById("bundleQty").value;
+  const total = parseInt(qty) * priceNum;
 
   const message = encodeURIComponent(
-    `Halo admin Avenyx_48, saya mau beli paket langganan:\n\n` +
-      `Paket: Langganan 30 Hari\n` +
-      `Harga: Rp 30.000\n` +
-      `Jumlah: ${qty}`,
+    `Halo admin Avenyx_48, saya mau order:\n\n` +
+      `Paket: ${packageName}\n` +
+      `Harga Satuan: Rp ${priceNum.toLocaleString("id-ID")}\n` +
+      `Jumlah: ${qty}\n` +
+      `Total: Rp ${total.toLocaleString("id-ID")}`,
   );
 
   window.open(`https://wa.me/${ADMIN_WA}?text=${message}`, "_blank");
