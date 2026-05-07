@@ -377,6 +377,54 @@ window.buyBundle = function (packageName, priceNum) {
   window.open(`https://wa.me/${ADMIN_WA}?text=${message}`, "_blank");
 };
 
+window.openMembershipDetail = function () {
+  const modal = document.createElement("div");
+  modal.className = "detail-modal";
+
+  modal.innerHTML = `
+    <div class="detail-card">
+      <button class="close-modal" onclick="closeShowDetail()">×</button>
+
+      <h2>Paket Langganan</h2>
+
+      <div class="detail-line"></div>
+
+      <div class="detail-info">
+        <p>✅ <span>Akses show selama 30 hari.</span></p>
+        <p>📅 <span>Update jadwal theater otomatis.</span></p>
+        <p>🔁 <span>Info replay show tersedia.</span></p>
+        <p>🎥 <span>Resolusi HD.</span></p>
+        <p>🚫 <span>Tidak bisa direfund.</span></p>
+        <p>✉️ <span>Konfirmasi pemesanan di WhatsApp admin.</span></p>
+        <p>💎 <span>Akses langsung setelah konfirmasi.</span></p>
+      </div>
+
+      <div class="detail-line"></div>
+
+      <div class="detail-price-row">
+        <span>HARGA</span>
+        <strong>Rp 30.000 <small style="font-weight:normal;color:#888">/bulan</small></strong>
+      </div>
+
+      <a href="#" onclick="buyMembership()" class="buy-ticket-btn">
+        Ambil Promo Ini
+      </a>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+};
+
+window.buyMembership = function () {
+  const message = encodeURIComponent(
+    `Halo admin Avenyx_48, saya mau ambil Paket Langganan:\n\n` +
+      `Paket: Langganan 30 Hari\n` +
+      `Harga: Rp 30.000/bulan`,
+  );
+
+  window.open(`https://wa.me/${ADMIN_WA}?text=${message}`, "_blank");
+};
+
 window.toggleMenu = function () {
   const menu = document.getElementById("mobileMenu");
   if (menu) {
