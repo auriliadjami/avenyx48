@@ -9,7 +9,7 @@ import {
   onSnapshot,
   query,
   orderBy,
-  serverTimestamp
+  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* FIREBASE CONFIG */
@@ -20,7 +20,7 @@ const firebaseConfig = {
   storageBucket: "avenyx48.firebasestorage.app",
   messagingSenderId: "1047050800219",
   appId: "1:1047050800219:web:6758e39c1889bc3a9bc37e",
-  measurementId: "G-SX1VQNST66"
+  measurementId: "G-SX1VQNST66",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -28,7 +28,7 @@ const db = getFirestore(app);
 
 const ADMIN_EMAIL = "auriliadjami@gmail.com";
 const ADMIN_LOGIN_KEY = "avenyx48_admin_login";
-const ADMIN_WA = "6287701445417"; // GANTI NOMOR ADMIN KAMU
+const ADMIN_WA = "6285742653063"; // GANTI NOMOR ADMIN KAMU
 
 const schedulesRef = collection(db, "schedules");
 let schedules = [];
@@ -48,10 +48,13 @@ function imageToBase64(file) {
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-  loginForm.addEventListener("submit", function(e) {
+  loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const email = document.getElementById("adminEmail").value.trim().toLowerCase();
+    const email = document
+      .getElementById("adminEmail")
+      .value.trim()
+      .toLowerCase();
     const message = document.getElementById("loginMessage");
 
     if (email === ADMIN_EMAIL) {
@@ -77,7 +80,7 @@ protectAdminPage();
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", function() {
+  logoutBtn.addEventListener("click", function () {
     localStorage.removeItem(ADMIN_LOGIN_KEY);
     window.location.href = "login.html";
   });
@@ -90,7 +93,7 @@ function startRealtimeSchedules() {
   onSnapshot(q, (snapshot) => {
     schedules = snapshot.docs.map((docItem) => ({
       id: docItem.id,
-      ...docItem.data()
+      ...docItem.data(),
     }));
 
     renderUserSchedules();
@@ -113,7 +116,6 @@ function isToday(dateString) {
   );
 }
 
-
 function renderUserSchedules() {
   const list = document.getElementById("scheduleList");
   if (!list) return;
@@ -123,7 +125,9 @@ function renderUserSchedules() {
     return;
   }
 
-  list.innerHTML = schedules.map((item, index) => `
+  list.innerHTML = schedules
+    .map(
+      (item, index) => `
     <div class="show-card">
       ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ""}
 
@@ -134,14 +138,8 @@ function renderUserSchedules() {
         <span>Theater</span>
       </div>
 
-    <div class="countdown ${
-        isToday(item.date) ? "live-now" : ""
-        }">
-        ${
-            isToday(item.date)
-            ? "🔴 LIVE HARI INI"
-            : "⏱ Jadwal tersedia"
-         }
+    <div class="countdown ${isToday(item.date) ? "live-now" : ""}">
+        ${isToday(item.date) ? "🔴 LIVE HARI INI" : "⏱ Jadwal tersedia"}
     </div>
 
       <p class="show-desc">${item.description}</p>
@@ -151,7 +149,9 @@ function renderUserSchedules() {
         <button class="detail-btn" onclick="openShowDetail(${index})">Detail Show</button>
       </div>
     </div>
-  `).join("");
+  `,
+    )
+    .join("");
 }
 
 /* ADMIN SCHEDULE */
@@ -164,7 +164,9 @@ function renderAdminSchedules() {
     return;
   }
 
-  list.innerHTML = schedules.map((item) => `
+  list.innerHTML = schedules
+    .map(
+      (item) => `
     <div class="admin-item">
       ${item.image ? `<img src="${item.image}" alt="${item.title}">` : ""}
       <h3>${item.title}</h3>
@@ -174,10 +176,12 @@ function renderAdminSchedules() {
       <p>${item.description}</p>
       <button class="delete-btn" onclick="deleteSchedule('${item.id}')">Hapus</button>
     </div>
-  `).join("");
+  `,
+    )
+    .join("");
 }
 
-window.deleteSchedule = async function(id) {
+window.deleteSchedule = async function (id) {
   const yakin = confirm("Yakin mau hapus jadwal ini?");
   if (!yakin) return;
 
@@ -188,7 +192,7 @@ window.deleteSchedule = async function(id) {
 const showForm = document.getElementById("showForm");
 
 if (showForm) {
-  showForm.addEventListener("submit", async function(e) {
+  showForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const imageFile = document.getElementById("image").files[0];
@@ -201,7 +205,7 @@ if (showForm) {
       time: document.getElementById("time").value,
       price: document.getElementById("price").value,
       description: document.getElementById("description").value,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     });
 
     showForm.reset();
@@ -210,7 +214,7 @@ if (showForm) {
 }
 
 /* DETAIL SHOW */
-window.openShowDetail = function(index) {
+window.openShowDetail = function (index) {
   const item = schedules[index];
 
   const modal = document.createElement("div");
@@ -268,12 +272,12 @@ window.openShowDetail = function(index) {
   document.body.appendChild(modal);
 };
 
-window.closeShowDetail = function() {
+window.closeShowDetail = function () {
   const modal = document.querySelector(".detail-modal");
   if (modal) modal.remove();
 };
 
-window.changeTicketQty = function(amount) {
+window.changeTicketQty = function (amount) {
   const input = document.getElementById("ticketQty");
   let value = parseInt(input.value) || 1;
 
@@ -283,24 +287,24 @@ window.changeTicketQty = function(amount) {
   input.value = value;
 };
 
-window.buyTicket = function(index) {
+window.buyTicket = function (index) {
   const item = schedules[index];
   const qty = document.getElementById("ticketQty").value;
 
   const message = encodeURIComponent(
     `Halo admin Avenyx_48, saya mau beli tiket show:\n\n` +
-    `Judul: ${item.title}\n` +
-    `Tanggal: ${item.date}\n` +
-    `Jam: ${item.time} WIB\n` +
-    `Harga: ${item.price}\n` +
-    `Jumlah Tiket: ${qty}`
+      `Judul: ${item.title}\n` +
+      `Tanggal: ${item.date}\n` +
+      `Jam: ${item.time} WIB\n` +
+      `Harga: ${item.price}\n` +
+      `Jumlah Tiket: ${qty}`,
   );
 
   window.open(`https://wa.me/${ADMIN_WA}?text=${message}`, "_blank");
 };
 
 /* MEMBERSHIP */
-window.openMembershipDetail = function() {
+window.openMembershipDetail = function () {
   const modal = document.createElement("div");
   modal.className = "detail-modal";
 
@@ -356,7 +360,7 @@ window.openMembershipDetail = function() {
   document.body.appendChild(modal);
 };
 
-window.changePackageQty = function(amount) {
+window.changePackageQty = function (amount) {
   const input = document.getElementById("packageQty");
   let value = parseInt(input.value) || 1;
 
@@ -366,20 +370,20 @@ window.changePackageQty = function(amount) {
   input.value = value;
 };
 
-window.buyMembership = function() {
+window.buyMembership = function () {
   const qty = document.getElementById("packageQty").value;
 
   const message = encodeURIComponent(
     `Halo admin Avenyx_48, saya mau beli paket langganan:\n\n` +
-    `Paket: Langganan 30 Hari\n` +
-    `Harga: Rp 30.000\n` +
-    `Jumlah: ${qty}`
+      `Paket: Langganan 30 Hari\n` +
+      `Harga: Rp 30.000\n` +
+      `Jumlah: ${qty}`,
   );
 
   window.open(`https://wa.me/${ADMIN_WA}?text=${message}`, "_blank");
 };
 
-window.toggleMenu = function() {
+window.toggleMenu = function () {
   const menu = document.getElementById("mobileMenu");
   if (menu) {
     menu.classList.toggle("show");
